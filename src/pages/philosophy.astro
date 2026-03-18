@@ -97,13 +97,21 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
         <div class="axiom-card">
           <span class="axiom-num">I</span>
           <div>
+            <strong>All blocks must adhere to the Figma design to the highest extent possible.</strong>
+            <p>The <a href="https://www.figma.com/design/FCaz0WDU5BlA5AcJReRrJ0/Terapeut-booking-website?node-id=10543-25320&t=adZ9CaEtbR9F1eww-1" target="_blank" rel="noopener" class="axiom-link">Figma source file</a> is the single source of truth for how every block should look and behave. Spacing, typography, color, border radius, shadow, and layout must match the Figma spec. When there is ambiguity in implementation, the Figma design wins. Deviations require explicit sign-off.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">II</span>
+          <div>
             <strong>Nordicon bullet lists are first-class citizens.</strong>
             <p>Any block that accepts bullet-point lists must also support Nordicon bullet lists. Standard HTML <code>&lt;ul&gt;</code> lists are not sufficient alone — the content manager must be able to swap in any of the 260 Nordicons as the bullet marker, with configurable icon color and size.</p>
           </div>
         </div>
 
         <div class="axiom-card">
-          <span class="axiom-num">II</span>
+          <span class="axiom-num">III</span>
           <div>
             <strong>Every CTA must be able to invoke HubSpot.</strong>
             <p>Any block that allows placement of call-to-action buttons must support the full button type system: <code>generic</code> (link), <code>login</code>, <code>signup</code>, <code>book_demo</code> (iframe modal), and <code>contact_sales</code> (HubSpot form modal). A CTA that can only link to a URL is incomplete. The <code>nh-button</code> block and its <code>lib.php</code> helpers are the canonical implementation — blocks should compose with them, not reinvent them.</p>
@@ -111,7 +119,7 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
         </div>
 
         <div class="axiom-card">
-          <span class="axiom-num">III</span>
+          <span class="axiom-num">IV</span>
           <div>
             <strong>Blocks are server-rendered, always.</strong>
             <p>All blocks use <code>acf.renderTemplate: "render.php"</code>. The editor shows a PHP-rendered preview, and the frontend renders the same PHP. There is no React rendering path for block output. InnerBlocks are used for structured content (quotes, pricing cards) but the wrapper is always server-side.</p>
@@ -119,7 +127,7 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
         </div>
 
         <div class="axiom-card">
-          <span class="axiom-num">IV</span>
+          <span class="axiom-num">V</span>
           <div>
             <strong>Colors are tokens, never hardcoded.</strong>
             <p>Block CSS references <code>var(--nh-color-*)</code> custom properties defined in <code>style.css :root</code>. ACF color pickers offer the palette hex values via <code>nh_acf_color_palette()</code>, but the rendered output maps back to CSS variables. This allows full-theme rebranding without touching block code.</p>
@@ -127,7 +135,7 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
         </div>
 
         <div class="axiom-card">
-          <span class="axiom-num">V</span>
+          <span class="axiom-num">VI</span>
           <div>
             <strong>One codebase, many brands.</strong>
             <p>The theme resolves brand-specific behavior by hostname at runtime — GTM container IDs, HubSpot form IDs, 404 redirect rules, and option page strings all switch automatically. A block must never contain brand-specific logic; it reads from the options page and the options page is brand-aware.</p>
@@ -135,7 +143,7 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
         </div>
 
         <div class="axiom-card">
-          <span class="axiom-num">VI</span>
+          <span class="axiom-num">VII</span>
           <div>
             <strong>Background system is composable.</strong>
             <p>Section-level blocks that accept a background must support the full trio: <em>transparent</em>, <em>solid</em> (single color), and <em>gradient</em> (start + end + direction). This is the shared background pattern — do not invent a fourth variant or skip one of the three.</p>
@@ -143,7 +151,7 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
         </div>
 
         <div class="axiom-card">
-          <span class="axiom-num">VII</span>
+          <span class="axiom-num">VIII</span>
           <div>
             <strong>Responsive means mobile-first, not mobile-only.</strong>
             <p>Every block must render correctly on mobile, tablet, and desktop. Where behavior must differ (e.g., faux-table accordion on mobile, full table on desktop; pricing dropdown on mobile, grid on desktop), the block implements both views with CSS or minimal JS — not separate blocks.</p>
@@ -151,7 +159,7 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
         </div>
 
         <div class="axiom-card">
-          <span class="axiom-num">VIII</span>
+          <span class="axiom-num">IX</span>
           <div>
             <strong>Content width is <code>clamp(0px, 1200px, 90%)</code>.</strong>
             <p>All sections follow the global content width constraint. Blocks may break out to <code>wideSize: 1440px</code> or full-width via alignment controls, but the default is the 1200px container. Blocks must not invent their own width system.</p>
@@ -588,6 +596,13 @@ patterns/
   .axiom-card code {
     font-size: 11px;
   }
+  .axiom-link {
+    color: var(--n-accent);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .axiom-link:hover { text-decoration-thickness: 2px; }
 
   /* Color swatches */
   .color-grid {
