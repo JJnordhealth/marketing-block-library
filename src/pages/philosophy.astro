@@ -4,6 +4,7 @@ import blocks from '../data/blocks.json';
 
 const shared = blocks.filter(b => b.category === 'shared');
 const envSpecific = blocks.filter(b => b.category === 'env-specific');
+const base = import.meta.env.BASE_URL;
 ---
 <html lang="en">
 <head>
@@ -18,13 +19,13 @@ const envSpecific = blocks.filter(b => b.category === 'env-specific');
 <body>
 
 <header class="site-header">
-  <a href="./" class="logo">
+  <a href={base} class="logo">
     <span class="logo-mark">N</span>
     <span>Block Library</span>
   </a>
   <nav class="header-nav-links">
-    <a href="./" class="header-nav-link">Catalog</a>
-    <a href="./philosophy" class="header-nav-link active">Philosophy</a>
+    <a href={base} class="header-nav-link">Catalog</a>
+    <a href={`${base}/philosophy/`} class="header-nav-link active">Philosophy</a>
   </nav>
   <div style="flex:1"></div>
   <div class="header-logo-badge">
