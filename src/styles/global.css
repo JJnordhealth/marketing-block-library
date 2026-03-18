@@ -89,6 +89,24 @@ body {
   font-size: 14px;
 }
 
+.header-nav-links {
+  display: flex;
+  gap: 4px;
+  margin-left: 4px;
+}
+
+.header-nav-link {
+  font-size: 13px;
+  color: var(--n-text-weaker);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: background 0.1s, color 0.1s;
+}
+
+.header-nav-link:hover { background: var(--n-accent-lighter); color: var(--n-text); }
+.header-nav-link.active { background: var(--n-accent-light); color: var(--n-accent); font-weight: 500; }
+
 .header-search {
   flex: 1;
   max-width: 400px;

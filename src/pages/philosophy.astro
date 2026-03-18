@@ -1,0 +1,643 @@
+---
+import '../styles/global.css';
+import blocks from '../data/blocks.json';
+
+const shared = blocks.filter(b => b.category === 'shared');
+const envSpecific = blocks.filter(b => b.category === 'env-specific');
+---
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Block Philosophy — Marketing Block Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><rect width='28' height='28' rx='7' fill='%233559c7'/><text x='50%' y='53%' dominant-baseline='central' text-anchor='middle' fill='white' font-family='system-ui' font-weight='700' font-size='15'>N</text></svg>" />
+</head>
+<body>
+
+<header class="site-header">
+  <a href="./" class="logo">
+    <span class="logo-mark">N</span>
+    <span>Block Library</span>
+  </a>
+  <nav class="header-nav-links">
+    <a href="./" class="header-nav-link">Catalog</a>
+    <a href="./philosophy" class="header-nav-link active">Philosophy</a>
+  </nav>
+  <div style="flex:1"></div>
+  <div class="header-logo-badge">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Nordhealth">
+      <path d="M33.722 39.495a5.076 5.076 0 0 1-3.61-1.486l-.026-.026c-.026-.013-.039-.039-.065-.052L16.428 24.195l2.216-2.215L32.21 35.168l.026.026c.027.014.04.04.066.066.378.378.886.6 1.42.6 1.108 0 2.15-.913 2.15-2.047V14.695c0-1.134-1.03-2.046-2.15-2.046a2.03 2.03 0 0 0-1.394.573l-.04.04-6.411 5.89-2.216-2.216 6.347-6.346c.013-.013.026-.04.052-.052A5.216 5.216 0 0 1 33.722 9c2.815 0 5.239 2.28 5.278 5.095v20.317c-.052 2.815-2.476 5.083-5.278 5.083z" fill="#fff"/>
+      <path d="M14.148 9c1.355 0 2.645.521 3.61 1.486l.026.026c.026.013.039.039.065.052l13.723 13.605-2.216 2.216-13.697-13.058-.026-.026c-.026-.014-.039-.04-.065-.066a2.014 2.014 0 0 0-1.42-.6c-1.108 0-2.02.913-2.02 2.047V33.8c0 1.134.899 2.046 2.02 2.046a2.03 2.03 0 0 0 1.394-.573l.04-.04 6.41-5.89 2.216 2.215-6.346 6.347c-.013.013-.026.04-.052.052a5.217 5.217 0 0 1-3.662 1.538c-2.815 0-5.109-2.28-5.148-5.095V14.083C9.052 11.268 11.346 9 14.148 9z" fill="#fff"/>
+    </svg>
+  </div>
+</header>
+
+<div class="wiki-layout">
+  <aside class="wiki-toc">
+    <div class="wiki-toc-title">On this page</div>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#axioms">Axioms</a></li>
+      <li><a href="#for-content-managers">For Content Managers</a>
+        <ul>
+          <li><a href="#cm-one-theme-many-brands">One theme, many brands</a></li>
+          <li><a href="#cm-color-system">The color system</a></li>
+          <li><a href="#cm-typography">Typography</a></li>
+          <li><a href="#cm-block-categories">Block categories</a></li>
+          <li><a href="#cm-ctas-and-hubspot">CTAs and HubSpot</a></li>
+          <li><a href="#cm-nordicons">Nordicons</a></li>
+          <li><a href="#cm-backgrounds">Background options</a></li>
+          <li><a href="#cm-pricing">Pricing module</a></li>
+          <li><a href="#cm-logo-strip">Logo strips</a></li>
+        </ul>
+      </li>
+      <li><a href="#for-developers">For Developers</a>
+        <ul>
+          <li><a href="#dev-architecture">Block architecture</a></li>
+          <li><a href="#dev-registration">Block registration</a></li>
+          <li><a href="#dev-nordicons-api">NordIcons API</a></li>
+          <li><a href="#dev-button-lib">Button lib.php</a></li>
+          <li><a href="#dev-color-tokens">Color token pipeline</a></li>
+          <li><a href="#dev-build-system">Build system</a></li>
+          <li><a href="#dev-js-namespace">JS namespace</a></li>
+          <li><a href="#dev-faux-table">Faux table transform</a></li>
+          <li><a href="#dev-template-hierarchy">Template hierarchy</a></li>
+          <li><a href="#dev-acf-patterns">ACF field patterns</a></li>
+          <li><a href="#dev-multi-brand">Multi-brand resolution</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <article class="wiki-content">
+
+    <!-- ════════════════════ OVERVIEW ════════════════════ -->
+    <section id="overview">
+      <h1>Block Philosophy</h1>
+      <p class="wiki-lead">
+        The <strong>Nordhealth TBU Marketing Theme</strong> (v0.1.40) is a WordPress Full Site Editing block theme that serves five therapy brands from a single codebase. Every block is an ACF-registered custom block rendered server-side via PHP, styled with Nordhealth's design tokens, and built to give content managers full creative control without touching code.
+      </p>
+      <p>
+        Brand differentiation happens at the hostname level — the same theme runs on Diarium (Finland), Physica (Norway), Psykbase (Norway), TerapeutBooking (Denmark), and EasyPractice — with per-brand GTM containers, HubSpot form IDs, and option page strings resolving automatically. The block library is shared; what changes between brands is the content, not the tooling.
+      </p>
+      <div class="wiki-callout">
+        <strong>Design principle:</strong> Colors are defined as CSS custom properties in <code>style.css :root</code> and referenced in <code>theme.json</code> via <code>var(--nh-color-*)</code>. This means the entire color scheme of any brand can be changed in one place without touching block code or editor palettes.
+      </div>
+    </section>
+
+    <!-- ════════════════════ AXIOMS ════════════════════ -->
+    <section id="axioms">
+      <h2>Axioms</h2>
+      <p>These are non-negotiable rules that every block must follow. When building new blocks or modifying existing ones, these axioms override any individual design decision.</p>
+
+      <div class="axiom-grid">
+        <div class="axiom-card">
+          <span class="axiom-num">I</span>
+          <div>
+            <strong>Nordicon bullet lists are first-class citizens.</strong>
+            <p>Any block that accepts bullet-point lists must also support Nordicon bullet lists. Standard HTML <code>&lt;ul&gt;</code> lists are not sufficient alone — the content manager must be able to swap in any of the 260 Nordicons as the bullet marker, with configurable icon color and size.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">II</span>
+          <div>
+            <strong>Every CTA must be able to invoke HubSpot.</strong>
+            <p>Any block that allows placement of call-to-action buttons must support the full button type system: <code>generic</code> (link), <code>login</code>, <code>signup</code>, <code>book_demo</code> (iframe modal), and <code>contact_sales</code> (HubSpot form modal). A CTA that can only link to a URL is incomplete. The <code>nh-button</code> block and its <code>lib.php</code> helpers are the canonical implementation — blocks should compose with them, not reinvent them.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">III</span>
+          <div>
+            <strong>Blocks are server-rendered, always.</strong>
+            <p>All blocks use <code>acf.renderTemplate: "render.php"</code>. The editor shows a PHP-rendered preview, and the frontend renders the same PHP. There is no React rendering path for block output. InnerBlocks are used for structured content (quotes, pricing cards) but the wrapper is always server-side.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">IV</span>
+          <div>
+            <strong>Colors are tokens, never hardcoded.</strong>
+            <p>Block CSS references <code>var(--nh-color-*)</code> custom properties defined in <code>style.css :root</code>. ACF color pickers offer the palette hex values via <code>nh_acf_color_palette()</code>, but the rendered output maps back to CSS variables. This allows full-theme rebranding without touching block code.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">V</span>
+          <div>
+            <strong>One codebase, many brands.</strong>
+            <p>The theme resolves brand-specific behavior by hostname at runtime — GTM container IDs, HubSpot form IDs, 404 redirect rules, and option page strings all switch automatically. A block must never contain brand-specific logic; it reads from the options page and the options page is brand-aware.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">VI</span>
+          <div>
+            <strong>Background system is composable.</strong>
+            <p>Section-level blocks that accept a background must support the full trio: <em>transparent</em>, <em>solid</em> (single color), and <em>gradient</em> (start + end + direction). This is the shared background pattern — do not invent a fourth variant or skip one of the three.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">VII</span>
+          <div>
+            <strong>Responsive means mobile-first, not mobile-only.</strong>
+            <p>Every block must render correctly on mobile, tablet, and desktop. Where behavior must differ (e.g., faux-table accordion on mobile, full table on desktop; pricing dropdown on mobile, grid on desktop), the block implements both views with CSS or minimal JS — not separate blocks.</p>
+          </div>
+        </div>
+
+        <div class="axiom-card">
+          <span class="axiom-num">VIII</span>
+          <div>
+            <strong>Content width is <code>clamp(0px, 1200px, 90%)</code>.</strong>
+            <p>All sections follow the global content width constraint. Blocks may break out to <code>wideSize: 1440px</code> or full-width via alignment controls, but the default is the 1200px container. Blocks must not invent their own width system.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════ FOR CONTENT MANAGERS ════════════════════ -->
+    <section id="for-content-managers">
+      <h2>For Content Managers</h2>
+      <p>This section explains how the block system works from the editor's perspective — what you can control, how the pieces fit together, and what conventions to follow.</p>
+
+      <h3 id="cm-one-theme-many-brands">One theme, many brands</h3>
+      <p>
+        You are editing the same theme regardless of whether you're logged into Diarium, Physica, Psykbase, TerapeutBooking, or EasyPractice. The blocks, templates, and editor experience are identical. What changes between brands is:
+      </p>
+      <ul>
+        <li><strong>Option page strings</strong> — button labels ("Varaa demo" vs "Book demo"), pricing text, logo strip taglines. These are set per-site in the ACF Options pages.</li>
+        <li><strong>HubSpot forms</strong> — each brand has its own contact-sales form ID. You don't need to configure this; the theme resolves it by hostname.</li>
+        <li><strong>GTM container</strong> — analytics tracking is brand-specific. Also resolved automatically.</li>
+      </ul>
+      <p>When you build a page, you're building it for one brand. But the blocks you use are the same toolkit available on every site.</p>
+
+      <h3 id="cm-color-system">The color system</h3>
+      <p>The theme palette is consistent across all blocks:</p>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="swatch" style="background:#3559C7"></div><div><strong>Primary</strong><br><code>#3559C7</code></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#0C1A3D"></div><div><strong>Secondary (Navy)</strong><br><code>#0C1A3D</code></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#4a7963"></div><div><strong>Tertiary (Green)</strong><br><code>#4A7963</code></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#536772"></div><div><strong>Neutral</strong><br><code>#536772</code></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#ffffff;border:1px solid #d8dee4"></div><div><strong>Light</strong><br><code>#FFFFFF</code></div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#000000"></div><div><strong>Dark</strong><br><code>#000000</code></div></div>
+      </div>
+      <p>Each primary color has 3 lighter variants (e.g., <code>primary-1</code>, <code>primary-2</code>, <code>primary-3</code>) and the neutrals have 5 steps from dark to near-white. When you see a color picker in a block's settings, it will offer these exact swatches.</p>
+
+      <h3 id="cm-typography">Typography</h3>
+      <p>
+        The theme uses <strong>Armin Grotesk</strong> exclusively, with 14 weight variants from Thin (50) to Black (900). Body text defaults to weight 250 (UltraLight) at 16px with generous 1.8 line-height. Headings use weight 300 at tight 1.1 line-height.
+      </p>
+      <p>
+        A special convention: wrapping text in a <code>&lt;span&gt;</code> inside a heading renders a <strong>7px-thick primary blue underline</strong>. This is the standard way to create emphasized heading text across the theme.
+      </p>
+      <p>Available font sizes in the editor: Small (12px), Normal (16px), Medium (20px), Large (24px), Extra Large (32px), Huge (48px), Gigantic (64px).</p>
+
+      <h3 id="cm-block-categories">Block categories</h3>
+      <p>
+        All blocks appear under <strong>Nordhealth Blocks</strong> in the block inserter. The editor strips all third-party pattern sources (Dotcom, Jetpack, core directory) to keep the inserter clean. Block patterns are organized into categories: headers, CTAs, grids, tables, cards, columns, and sections.
+      </p>
+
+      <h3 id="cm-ctas-and-hubspot">CTAs and HubSpot forms</h3>
+      <p>
+        The <strong>NH Button</strong> block is the universal CTA component. When you add one, you choose a <em>type</em>:
+      </p>
+      <ul>
+        <li><strong>Generic</strong> — a standard link to any URL</li>
+        <li><strong>Login / Signup</strong> — links to the URL defined in Options &gt; Button Settings</li>
+        <li><strong>Book Demo</strong> — opens an iframe modal (the booking calendar)</li>
+        <li><strong>Contact Sales</strong> — opens a HubSpot form modal specific to your brand</li>
+      </ul>
+      <p>
+        The button label defaults to the global string from the Options page (so all "Contact Sales" buttons say the same thing), but you can override it per-instance. Design variants include primary-filled, light-filled, and outline styles.
+      </p>
+      <p>
+        Many section blocks (Full Width Banner, Text CTA Section, Hero, Header Column Text) include built-in CTA repeaters that use the same underlying button system. If you see a CTA field in a block, it supports all five button types.
+      </p>
+
+      <h3 id="cm-nordicons">Nordicons</h3>
+      <p>
+        The theme ships with <strong>260 inline SVG icons</strong> organized into categories: arrows, files, generic, graphs, interface, keyboard, medical, navigation, text, and user. You can use them in several ways:
+      </p>
+      <ul>
+        <li><strong>Standalone</strong> — the <em>Nordicon</em> block places a single icon with full control over color, size, orientation (rotation), and container style (none, filled circle, bordered circle).</li>
+        <li><strong>In cards</strong> — the <em>Card</em> and <em>Benefits Card Section</em> blocks include icon fields that pull from the Nordicon library.</li>
+        <li><strong>As bullet markers</strong> — when available, list blocks replace standard bullets with Nordicon SVGs.</li>
+        <li><strong>In pricing tables</strong> — checkmarks and X marks in the feature comparison table are Nordicons.</li>
+      </ul>
+      <p>When you see a dropdown labeled with icon names in a block's sidebar, it's pulling from the same 260-icon set.</p>
+
+      <h3 id="cm-backgrounds">Background options</h3>
+      <p>Most section-level blocks offer three background modes:</p>
+      <ul>
+        <li><strong>Transparent</strong> — inherits the page background</li>
+        <li><strong>Solid</strong> — pick any color from the palette</li>
+        <li><strong>Gradient</strong> — choose start color, end color, and direction (e.g., "to right", "to bottom")</li>
+      </ul>
+      <p>This pattern is consistent across Full Width Banner, Mixed Content, Centered Text Section, Header Column Text, Text CTA Section, and Two Column Text. Learn it once, use it everywhere.</p>
+
+      <h3 id="cm-pricing">Pricing module</h3>
+      <p>
+        The pricing system is a two-level structure: the <strong>Pricing</strong> block is the container that renders the monthly/annual toggle and the feature comparison table, and inside it sit three <strong>Price Card</strong> blocks (one per tier). Pricing data — amounts, badges, value propositions — is managed on the ACF Options page, not in the block editor directly. The comparison table pulls from the <strong>Features</strong> custom post type, grouped by <strong>Feature Domain</strong> taxonomy terms.
+      </p>
+
+      <h3 id="cm-logo-strip">Logo strips</h3>
+      <p>
+        There are two logo strip blocks. The original <strong>Logo Strip</strong> reads from the global Options page repeater (one set of logos shared across pages). The <strong>Better Logo Strip</strong> stores logos per-block — so each instance can have different logos. Both render an infinite-scroll animation.
+      </p>
+    </section>
+
+    <!-- ════════════════════ FOR DEVELOPERS ════════════════════ -->
+    <section id="for-developers">
+      <h2>For Developers</h2>
+      <p>Technical reference for building, extending, and maintaining the block system.</p>
+
+      <h3 id="dev-architecture">Block architecture</h3>
+      <p>Every block follows the same structure:</p>
+      <pre><code>src/blocks/nh-{'{name}'}/
+  block.json      # ACF block registration metadata
+  render.php      # Server-side render template
+  index.js        # Editor-side JS (mostly empty scaffold)
+  main.scss       # Block-specific styles → compiled to index.css
+  lib.php         # (optional) Shared functions for multi-block use</code></pre>
+      <p>
+        The <code>render.php</code> pattern is consistent: extract <code>$anchor</code> and <code>$class_name</code> from <code>$block</code>, fetch ACF fields with <code>get_field()</code>, emit HTML wrapped in <code>get_block_wrapper_attributes()</code>. InnerBlocks use a locked template via JSX support in <code>block.json</code>.
+      </p>
+
+      <h3 id="dev-registration">Block registration</h3>
+      <p>
+        <code>includes/blocks_handler.php</code> registers all blocks automatically by scanning <code>dist/blocks/*/block.json</code>. No manual registration is needed — if a <code>block.json</code> exists in the dist directory, it's registered. The handler also registers the <code>nordhealth-blocks</code> category at priority position 1.
+      </p>
+      <p>Build command: <code>npx wp-scripts build --webpack-copy-php --webpack-src-dir=src/blocks --output-path=dist/blocks</code></p>
+
+      <h3 id="dev-nordicons-api">NordIcons API</h3>
+      <p>
+        <code>includes/nordicons.php</code> exposes a singleton <code>NordIcons</code> class with 260 inline SVG icons. Two accessor patterns:
+      </p>
+      <pre><code>// Pattern 1: Raw SVG string (for embedding in custom markup)
+$svg = NordIcons::get()->icon('arrow-right')['svg'];
+
+// Pattern 2: Wrapped span (for direct output)
+echo NordIcons::get()->svg('interface-checked-small');
+// → &lt;span class="nordicon nordicon-interface-checked-small"&gt;...svg...&lt;/span&gt;
+
+// Batch retrieval
+$svgs = NordIcons::get()->svgs(['arrow-right', 'arrow-left']);</code></pre>
+      <p>
+        The ACF integration auto-populates any select field with wrapper class <code>select-nordicon</code>. Editor previews get <code>window.iconSvgs</code> injected via <code>wp_head</code> for client-side rendering.
+      </p>
+
+      <h3 id="dev-button-lib">Button lib.php</h3>
+      <p>
+        <code>src/blocks/nh-button/lib.php</code> is the shared CTA function library. Key functions:
+      </p>
+      <pre><code>nh_get_acf_fields($group_key)   // Fetch all fields from an ACF group as k/v pairs
+nh_link_button($args)           // Render &lt;a&gt; button (generic, login, signup types)
+nh_action_button($args)         // Render &lt;div role="button"&gt; (book_demo, contact_sales)
+nh_price_card_generate_price()  // Render monthly/annual price display</code></pre>
+      <p>
+        HubSpot integration: <code>book_demo</code> injects a <code>&lt;template id="book-demo"&gt;</code> iframe modal (once). <code>contact_sales</code> sets a global flag that triggers <code>nh_load_html_templates()</code> in <code>wp_footer</code> to inject the HubSpot form. The form ID resolves by hostname from <code>$brand_form_map</code> in <code>functions.php</code>. Portal: <code>144062425</code>, region: EU.
+      </p>
+
+      <h3 id="dev-color-tokens">Color token pipeline</h3>
+      <pre><code>style.css :root
+  └─ --nh-color-primary: #3559C7
+      └─ theme.json palette entry: var(--nh-color-primary)
+          └─ WordPress generates: .has-primary-color / .has-primary-background-color
+          └─ ACF color picker: nh_acf_color_palette() returns hex array
+              └─ Block render.php maps hex → CSS var for inline styles</code></pre>
+      <p>The indirection through CSS custom properties is deliberate — it allows full-theme rebranding by editing a single <code>:root</code> block in <code>style.css</code>.</p>
+
+      <h3 id="dev-build-system">Build system</h3>
+      <pre><code>npm run build          # Runs all three in parallel:
+  ├─ build_blocks      # wp-scripts build --webpack-copy-php
+  ├─ build_sass        # sass src/scss/main.scss dist/css/styles.css
+  └─ build_js          # uglifyjs src/js/*.js → dist/js/nh_main.min.js
+
+npm run watch          # All three in watch mode (concurrently)</code></pre>
+      <p>
+        <code>@wordpress/scripts</code> handles block compilation. The <code>--webpack-copy-php</code> flag copies <code>render.php</code> and <code>lib.php</code> alongside compiled JS/CSS in <code>dist/blocks/</code>. Global SCSS and JS are handled separately with <code>sass</code> and <code>uglifyjs</code>.
+      </p>
+
+      <h3 id="dev-js-namespace">JS namespace</h3>
+      <p>
+        <code>assets_handler.php</code> injects <code>window._nh</code> via <code>ob_start</code> buffer manipulation as the first script in <code>&lt;head&gt;</code>:
+      </p>
+      <pre><code set:html={`window._nh = {
+  init: {},
+  events: { scroll: {}, resize: {}, load: {}, ready: {} },
+  var: {},
+  fn: {},
+  util: {},
+  components: {},
+  _initialized: "ob_start"
+};`} /></pre>
+      <p>Vendor scripts: HubSpot Forms Embed v2, HubSpot tracking (portal 144062425), and Swiper 11 (conditionally, for post-carousel).</p>
+
+      <h3 id="dev-faux-table">Faux table transform</h3>
+      <p>
+        The <code>nh-faux-table</code> block wraps a <code>core/table</code> and applies a <code>register_block_type_args</code> filter that transforms the HTML table into a <code>&lt;ul&gt;</code>-based responsive structure using <code>DOMDocument</code>. On mobile, this renders as an accordion; on desktop, as a styled table. Developer note in the code: <em>"Originally created as AI slop for time efficiency."</em>
+      </p>
+
+      <h3 id="dev-template-hierarchy">Template hierarchy</h3>
+      <pre><code>templates/
+  ├─ front-page.html    # header → post content → footer
+  ├─ page.html          # header → post content → footer (identical)
+  ├─ index.html         # header → post content → footer (identical)
+  └─ testimonial.html   # Renders single nh-testimonial-card block
+
+parts/
+  ├─ header.html        # Logo, nav, login + signup buttons
+  └─ footer.html        # Navy bg, columns, nav, contact, copyright
+
+patterns/
+  └─ hero-front.php     # Stub (registered but empty)</code></pre>
+      <p>
+        All three main templates are identical in structure. <code>patterns_handler.php</code> strips all non-Nordhealth patterns from the editor and registers custom categories: nordhealth, headers, ctas, grids, tables, cards, columns, sections.
+      </p>
+
+      <h3 id="dev-acf-patterns">ACF field patterns</h3>
+      <ul>
+        <li><strong>Options pages</strong> store global strings, labels, and URLs (button settings in <code>group_67cc5d2016b73</code>, pricing in <code>group_67989b543a478</code>)</li>
+        <li><strong>Blocks</strong> fetch options via <code>nh_get_acf_fields($group_key)</code> which returns all fields as a key-value associative array</li>
+        <li><strong>Naming convention:</strong> <code>{'{block}'}_{'{field}'}</code> (e.g., <code>button_login_label</code>, <code>price_card_badge</code>)</li>
+        <li><strong>Icon selectors:</strong> any ACF select field with wrapper class <code>select-nordicon</code> auto-populates with all 260 icon choices</li>
+        <li><strong>Sync:</strong> all field groups use <code>acfe_autosync: ['php', 'json']</code> for dual PHP/JSON export</li>
+      </ul>
+
+      <h3 id="dev-multi-brand">Multi-brand resolution</h3>
+      <p>Brand-specific behavior resolves via <code>$_SERVER['HTTP_HOST']</code> at runtime:</p>
+      <pre><code>// GTM containers (functions.php → nh_get_gtm_container_id())
+'diarium.fi'           → 'GTM-XXXXXXX'
+'physica.no'           → 'GTM-YYYYYYY'
+'psykbase.no'          → 'GTM-ZZZZZZZ'
+'terapeutbooking.dk'   → 'GTM-AAAAAAA'
+
+// HubSpot contact-sales forms (functions.php → $brand_form_map)
+'physica.no'           → form UUID A
+'psykbase.no'          → form UUID B
+// Portal: 144062425 (all brands)
+
+// 404 redirect (functions.php)
+// Only on terapeutbooking.dk: injects /legacy/ and 307 redirects</code></pre>
+      <p>A block never checks the hostname directly. It reads from ACF options, and the options are set per-site by the content team.</p>
+    </section>
+
+  </article>
+</div>
+
+<style>
+  /* Wiki-specific styles layered on top of global.css */
+  .header-nav-links {
+    display: flex;
+    gap: 4px;
+    margin-left: 16px;
+  }
+  .header-nav-link {
+    font-size: 13px;
+    color: var(--n-text-weaker);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background 0.1s, color 0.1s;
+  }
+  .header-nav-link:hover { background: var(--n-accent-lighter); color: var(--n-text); }
+  .header-nav-link.active { background: var(--n-accent-light); color: var(--n-accent); font-weight: 500; }
+
+  .wiki-layout {
+    display: flex;
+    padding-top: var(--header-h);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .wiki-toc {
+    position: sticky;
+    top: var(--header-h);
+    height: calc(100vh - var(--header-h));
+    width: 220px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding: 24px 0 24px 24px;
+    font-size: 12px;
+  }
+  .wiki-toc-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--n-text-weakest);
+    margin-bottom: 12px;
+  }
+  .wiki-toc ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .wiki-toc > ul > li { margin-bottom: 6px; }
+  .wiki-toc ul ul {
+    padding-left: 12px;
+    margin-top: 4px;
+    border-left: 1px solid var(--n-border);
+  }
+  .wiki-toc ul ul li { margin-bottom: 2px; }
+  .wiki-toc a {
+    color: var(--n-text-weak);
+    text-decoration: none;
+    transition: color 0.1s;
+    line-height: 1.6;
+  }
+  .wiki-toc a:hover { color: var(--n-accent); }
+
+  .wiki-content {
+    flex: 1;
+    min-width: 0;
+    padding: 32px 48px 80px;
+  }
+
+  .wiki-content h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--n-text);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .wiki-lead {
+    font-size: 16px;
+    color: var(--n-text-weak);
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .wiki-content section {
+    margin-bottom: 48px;
+  }
+  .wiki-content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--n-text);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--n-accent);
+  }
+  .wiki-content h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--n-text);
+    margin-top: 28px;
+    margin-bottom: 8px;
+  }
+  .wiki-content p {
+    margin-bottom: 12px;
+    line-height: 1.65;
+    color: var(--n-text-weak);
+  }
+  .wiki-content ul, .wiki-content ol {
+    padding-left: 20px;
+    margin-bottom: 12px;
+  }
+  .wiki-content li {
+    margin-bottom: 4px;
+    line-height: 1.6;
+    color: var(--n-text-weak);
+  }
+  .wiki-content code {
+    font-family: var(--n-mono);
+    font-size: 12px;
+    background: var(--n-surface-raised);
+    border: 1px solid var(--n-border);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--n-text);
+  }
+  .wiki-content pre {
+    background: #0c1a3d;
+    color: #c8d3e0;
+    border-radius: var(--n-radius);
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .wiki-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .wiki-callout {
+    background: var(--n-accent-light);
+    border-left: 3px solid var(--n-accent);
+    padding: 12px 16px;
+    border-radius: 0 var(--n-radius) var(--n-radius) 0;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--n-text-weak);
+  }
+  .wiki-callout strong { color: var(--n-text); }
+  .wiki-callout code {
+    font-size: 11px;
+  }
+
+  /* Axiom cards */
+  .axiom-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .axiom-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--n-surface);
+    border-radius: var(--n-radius);
+    box-shadow: var(--n-shadow-card);
+  }
+  .axiom-card:hover {
+    box-shadow: var(--n-shadow-hover);
+  }
+  .axiom-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--n-accent);
+    min-width: 32px;
+    text-align: center;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+  }
+  .axiom-card strong {
+    color: var(--n-text);
+    font-size: 14px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .axiom-card p {
+    font-size: 13px;
+    color: var(--n-text-weak);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .axiom-card code {
+    font-size: 11px;
+  }
+
+  /* Color swatches */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+    margin: 12px 0 16px;
+  }
+  .color-swatch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--n-surface);
+    border-radius: var(--n-radius);
+    box-shadow: var(--n-shadow-card);
+  }
+  .swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .color-swatch strong { font-size: 12px; color: var(--n-text); }
+  .color-swatch code { font-size: 10px; }
+  .color-swatch div { line-height: 1.4; }
+
+  @media (max-width: 900px) {
+    .wiki-toc { display: none; }
+    .wiki-content { padding: 20px 16px 60px; }
+    .header-nav-links { margin-left: 8px; }
+  }
+</style>
+
+<script is:inline>
+  // TOC scroll spy
+  const tocLinks = document.querySelectorAll('.wiki-toc a');
+  const sections = document.querySelectorAll('.wiki-content section, .wiki-content h3[id]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.style.color = '');
+        const id = entry.target.id;
+        const link = document.querySelector(`.wiki-toc a[href="#${id}"]`);
+        if (link) link.style.color = 'var(--n-accent)';
+      }
+    });
+  }, { rootMargin: '-80px 0px -60% 0px' });
+  sections.forEach(s => { if (s.id) observer.observe(s); });
+</script>
+
+</body>
+</html>
