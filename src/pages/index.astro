@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import BlockCard from '../components/BlockCard.astro';
+import blocks from '../data/blocks.json';
+
+const shared = blocks.filter(b => b.category === 'shared');
+const envSpecific = blocks.filter(b => b.category === 'env-specific');
+const allEnvs = ['diarium', 'easypractice', 'tbdk', 'psykbase', 'physica'];
+---
+<Base>
+  <div class="blocks-grid">
+    <div class="section-header">
+      <h2>Shared Blocks</h2>
+      <span class="line"></span>
+      <span class="count">{shared.length}</span>
+    </div>
+
+    {shared.map(block => (
+      <BlockCard block={block} />
+    ))}
+
+    <div class="section-header">
+      <h2>Environment-Specific</h2>
+      <span class="line"></span>
+      <span class="count">{envSpecific.length}</span>
+    </div>
+
+    {envSpecific.map(block => (
+      <BlockCard block={block} />
+    ))}
+
+    <div class="section-header" id="matrix">
+      <h2>Environment Matrix</h2>
+      <span class="line"></span>
+    </div>
+
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Block</th>
+            <th>Slug</th>
+            <th>Ver</th>
+            {allEnvs.map(e => <th>{e}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {blocks.map(b => (
+            <tr class:list={[{ 'env-row': b.category === 'env-specific' }]}>
+              <td>{String(b.num).padStart(2, '0')}</td>
+              <td><a href={`#${b.id}`} style="color:var(--n-text);text-decoration:none">{b.title}</a></td>
+              <td class="mono">{b.slug}</td>
+              <td class="mono">{b.version || '-'}</td>
+              {allEnvs.map(env => (
+                <td class:list={[b.envs.includes(env) ? 'check' : 'dash']}>
+                  {b.envs.includes(env) ? '\u2713' : '-'}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div id="empty-state" class="empty-state" style="display:none">
+      <p>No blocks match your search.</p>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+import blocks from '../data/blocks.json';
+
+const shared = blocks.filter(b => b.category === 'shared');
+const envSpecific = blocks.filter(b => b.category === 'env-specific');
+---
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketing Block Library - Nordhealth Therapy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><rect width='28' height='28' rx='7' fill='%233559c7'/><text x='50%' y='53%' dominant-baseline='central' text-anchor='middle' fill='white' font-family='system-ui' font-weight='700' font-size='15'>N</text></svg>" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="#top" class="logo">
+      <span class="logo-mark">N</span>
+      <span>Block Library</span>
+    </a>
+    <div class="header-search">
+      <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="7" cy="7" r="5.5" /><line x1="11" y1="11" x2="15" y2="15" />
+      </svg>
+      <input type="text" id="search" placeholder="Search blocks..." autocomplete="off" />
+      <span class="search-shortcut">/</span>
+    </div>
+    <div class="header-meta">
+      <span class="header-stat"><span class="dot"></span> 30 blocks</span>
+      <span class="header-stat">5 envs</span>
+      <span class="header-stat">v0.1.40</span>
+    </div>
+  </header>
+
+  <div class="site-layout">
+    <nav class="site-sidebar">
+      <div class="sidebar-section-label">Shared Blocks</div>
+      <ul class="sidebar-nav">
+        {shared.map(b => (
+          <li>
+            <a href={`#${b.id}`}>
+              <span class="nav-num">{String(b.num).padStart(2, '0')}</span>
+              {b.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="sidebar-section-label" style="margin-top:12px">Environment-Specific</div>
+      <ul class="sidebar-nav">
+        {envSpecific.map(b => (
+          <li>
+            <a href={`#${b.id}`}>
+              <span class="nav-num">{String(b.num).padStart(2, '0')}</span>
+              {b.title}
+              <span class="nav-env">{b.envs[0]}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="sidebar-section-label" style="margin-top:12px">Views</div>
+      <ul class="sidebar-nav">
+        <li><a href="#matrix">Environment Matrix</a></li>
+      </ul>
+    </nav>
+
+    <main class="site-main" id="top">
+      <slot />
+    </main>
+  </div>
+
+  <script is:inline>
+    // Search
+    const search = document.getElementById('search');
+    const entries = document.querySelectorAll('.block-entry');
+    const sections = document.querySelectorAll('.section-header');
+    const empty = document.getElementById('empty-state');
+
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase().trim();
+      let visible = 0;
+      entries.forEach(el => {
+        const match = !q ||
+          el.dataset.title.toLowerCase().includes(q) ||
+          el.dataset.slug.toLowerCase().includes(q) ||
+          el.dataset.desc.toLowerCase().includes(q);
+        el.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      sections.forEach(el => el.style.display = q ? 'none' : '');
+      if (empty) empty.style.display = visible === 0 ? '' : 'none';
+    });
+
+    // Keyboard shortcut: / to focus search
+    document.addEventListener('keydown', e => {
+      if (e.key === '/' && document.activeElement !== search) {
+        e.preventDefault();
+        search.focus();
+      }
+      if (e.key === 'Escape') {
+        search.value = '';
+        search.dispatchEvent(new Event('input'));
+        search.blur();
+      }
+    });
+
+    // Active sidebar link on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+          const link = document.querySelector(`.sidebar-nav a[href="#${entry.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-80px 0px -60% 0px' });
+
+    document.querySelectorAll('.block-entry').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

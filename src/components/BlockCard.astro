@@ -1,0 +1,82 @@
+---
+const { block } = Astro.props;
+const allEnvs = ['diarium', 'easypractice', 'tbdk', 'psykbase', 'physica'];
+const envAbbr: Record<string, string> = {
+  diarium: 'DI',
+  easypractice: 'EP',
+  tbdk: 'TB',
+  psykbase: 'PS',
+  physica: 'PH',
+};
+const isEnvSpecific = block.category === 'env-specific';
+---
+<div
+  class="block-entry"
+  id={block.id}
+  data-title={block.title}
+  data-slug={block.slug}
+  data-desc={block.description}
+>
+  <div class="block-entry-header">
+    <span class="block-num">{String(block.num).padStart(2, '0')}</span>
+    <div class="block-title-group">
+      <div class="block-title">{block.title}</div>
+      <div class="block-slug">{block.acfSlug}</div>
+    </div>
+    {block.version ? (
+      <span class:list={['block-version', { 'env-only': isEnvSpecific }]}>
+        v{block.version}
+      </span>
+    ) : isEnvSpecific ? (
+      <span class="block-version env-only">{block.envs[0]}</span>
+    ) : null}
+  </div>
+  <div class="block-entry-body">
+    <p class="block-desc">{block.description}</p>
+
+    {block.fields.length > 0 && (
+      <div class="detail-row">
+        <span class="detail-label">ACF Fields</span>
+        <div class="tag-list">
+          {block.fields.map((f: { name: string; repeater?: boolean }) => (
+            <span class:list={['tag', { repeater: f.repeater }]}>{f.name}</span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="detail-row">
+      <span class="detail-label">Supports</span>
+      <div class="tag-list">
+        {block.supports.map((s: string) => (
+          <span class="pill">{s}</span>
+        ))}
+      </div>
+    </div>
+
+    {block.deps.length > 0 && (
+      <div class="detail-row">
+        <span class="detail-label">Dependencies</span>
+        <div class="tag-list">
+          {block.deps.map((d: string) => (
+            <span class="tag dep">{d}</span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="detail-row">
+      <span class="detail-label">Environments</span>
+      <div class="env-dots">
+        {allEnvs.map(env => (
+          <span
+            class:list={['env-dot', block.envs.includes(env) ? 'on' : 'off']}
+            title={env}
+          >
+            {envAbbr[env]}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
